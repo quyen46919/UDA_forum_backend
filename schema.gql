@@ -1,0 +1,44 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""users"""
+type User {
+  id: ID!
+  fullName: String!
+  email: String!
+  password: String!
+  avatarUrl: String
+  bannerUrl: String
+
+  """0: Unknow | 1: Male | 2: Female"""
+  gender: Int!
+}
+
+type LoginResponseType {
+  access_token: String!
+  user: User!
+}
+
+type Query {
+  users: [User!]!
+}
+
+type Mutation {
+  """User login"""
+  login(loginInput: LoginInput!): LoginResponseType!
+
+  """User register"""
+  signup(createUserInput: CreateUserInput!): User!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input CreateUserInput {
+  fullName: String!
+  email: String!
+  password: String!
+}

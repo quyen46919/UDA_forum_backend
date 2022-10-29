@@ -2,15 +2,49 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isNil } from 'lodash';
+import { join } from 'path';
 
 @Injectable()
 export class ApiConfigService {
   constructor(private configService: ConfigService) {}
 
   get mysqlConfig(): TypeOrmModuleOptions {
+    let entities = [
+      join(__dirname, '../../entities/*.entity{.ts,.js}'),
+      join(__dirname, '/../../entities/*.view-entity{.ts,.js}'),
+    ];
+
+    let migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
+
+    if (module.hot) {
+      const entityContext = require.context(
+        './../../modules',
+        true,
+        /\.entity\.ts$/,
+      );
+      entities = entityContext.keys().map((id) => {
+        const entityModule = entityContext<Record<string, unknown>>(id);
+        const [entity] = Object.values(entityModule);
+
+        return entity as string;
+      });
+      const migrationContext = require.context(
+        './../../database/migrations',
+        false,
+        /\.ts$/,
+      );
+
+      migrations = migrationContext.keys().map((id) => {
+        const migrationModule = migrationContext<Record<string, unknown>>(id);
+        const [migration] = Object.values(migrationModule);
+
+        return migration as string;
+      });
+    }
+
     return {
-      // entities,
-      // migrations,
+      entities,
+      migrations,
       keepConnectionAlive: !this.isTest,
       dropSchema: this.isTest,
       type: 'mysql',

@@ -1,7 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { ApiConfigService } from '../services/api-config.service';
+import { JwtConstants } from '../services/jwt-constants';
 
-const providers = [ApiConfigService];
+const providers = [ApiConfigService, JwtConstants];
 
 @Global()
 @Module({
