@@ -45,6 +45,7 @@
     "crypto": "^1.0.1",
     "graphql": "^16.6.0",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "mongoose": "^6.5.4",
     "mysql2": "^2.3.3",
     "passport": "^0.6.0",
