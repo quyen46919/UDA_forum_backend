@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/entities/users.entity';
+import { User } from 'src/entities/user.entity';
 import { SharedModule } from 'src/shared/types/shared.module';
 import { JwtConstants } from 'src/shared/services/jwt-constants';
 import { UserService } from './user.service';

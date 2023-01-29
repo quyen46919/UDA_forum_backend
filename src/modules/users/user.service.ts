@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommonMessage } from 'src/common/messages';
-import { User } from 'src/entities/users.entity';
+import { User } from 'src/entities/user.entity';
 import { CustomBadRequestException } from 'src/shared/exceptions/bad-request.exception';
 import { getConnection, Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user-input.dto';

@@ -2,17 +2,39 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""user_tokens"""
+type UserToken {
+  id: ID!
+  user: User!
+  token: String!
+  refreshToken: String!
+  version: Int!
+  description: String!
+
+  """0: ADMIN | 1: STUDENT | 2: LECTURE"""
+  role: Int!
+}
+
 """users"""
 type User {
   id: ID!
   fullName: String!
   email: String!
   password: String!
-  avatarUrl: String
-  bannerUrl: String
+  avatar: String
+  banner: String
+  phoneNumber: String
+  description: String
+
+  """0: ADMIN | 1: STUDENT | 2: LECTURE"""
+  role: Int!
 
   """0: Unknow | 1: Male | 2: Female"""
   gender: Int!
+  is_valid_email: Int!
+  faceRecognitionModel: String
+  secret_key: String
+  userTokens: [UserToken!]!
 }
 
 type LoginResponseType {

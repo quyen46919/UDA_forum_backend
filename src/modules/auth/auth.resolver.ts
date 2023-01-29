@@ -1,6 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
-import { User } from 'src/entities/users.entity';
+import { User } from 'src/entities/user.entity';
 import { CreateUserInput } from '../users/dto/create-user-input.dto';
 import { AuthService } from './auth.service';
 import { LoginResponseType } from './dto/login-response.type';
