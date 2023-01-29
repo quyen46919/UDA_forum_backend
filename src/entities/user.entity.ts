@@ -4,8 +4,9 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { RoleTypes } from '../common/enums/role.enum';
 import { UserToken } from './user-token.entity';
+import { UserQuestionAction } from './user-question-action.entity';
 
-export interface UserInterface {
+export interface IUser {
   fullName: string;
   email: string;
   password: string;
@@ -22,7 +23,7 @@ export interface UserInterface {
 
 @Entity({ name: 'users' })
 @ObjectType({ description: 'users' })
-export class User extends AbstractEntity implements UserInterface {
+export class User extends AbstractEntity implements IUser {
   @Field(() => ID)
   id: string;
 
@@ -82,6 +83,7 @@ export class User extends AbstractEntity implements UserInterface {
   @Column({
     name: 'role',
     type: 'tinyint',
+    comment: '0: ADMIN | 1: STUDENT | 2: LECTURE',
   })
   @Field(() => Int, { description: '0: ADMIN | 1: STUDENT | 2: LECTURE' })
   role: RoleTypes = 1;
@@ -117,8 +119,14 @@ export class User extends AbstractEntity implements UserInterface {
   @Field(() => String, { nullable: true })
   secret_key?: string;
 
-  // relationship
+  // relationships
   @Field(() => [UserToken])
   @OneToMany(() => UserToken, (tokens) => tokens.user, { cascade: true })
   userTokens: UserToken[];
+
+  @Field(() => [UserQuestionAction])
+  @OneToMany(() => UserQuestionAction, (actions) => actions.user, {
+    cascade: true,
+  })
+  questionActions: UserQuestionAction[];
 }

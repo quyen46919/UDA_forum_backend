@@ -5,7 +5,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { User } from './user.entity';
 
-export interface UserToken {
+export interface IUserToken {
   token: string;
   refreshToken: string;
   version: number;
@@ -15,7 +15,8 @@ export interface UserToken {
 
 @Entity({ name: 'user_tokens' })
 @ObjectType({ description: 'user_tokens' })
-export class UserToken extends AbstractEntity implements UserToken {
+export class UserToken extends AbstractEntity implements IUserToken {
+  type: TokenTypes;
   @Field(() => ID)
   id: string;
 
@@ -53,6 +54,7 @@ export class UserToken extends AbstractEntity implements UserToken {
   @Column({
     name: 'type',
     type: 'tinyint',
+    comment: '0: ADMIN | 1: STUDENT | 2: LECTURE',
   })
   @Field(() => Int, { description: '0: ADMIN | 1: STUDENT | 2: LECTURE' })
   role: RoleTypes = 1;

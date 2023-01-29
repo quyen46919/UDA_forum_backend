@@ -15,6 +15,53 @@ type UserToken {
   role: Int!
 }
 
+"""question_images"""
+type QuestionImage {
+  id: ID!
+  name: String!
+  question: [Question!]!
+}
+
+"""tags"""
+type Tag {
+  id: ID!
+  name: String!
+  logo: String!
+  description: String!
+
+  """0: FALSE | 1: TRUE"""
+  isHidden: Int!
+}
+
+"""question_tags"""
+type QuestionTag {
+  tag: Tag!
+  question: Question!
+}
+
+"""questions"""
+type Question {
+  id: ID!
+  createUserId: String
+  title: String!
+  content: String!
+  count: Int!
+  githubLink: String!
+
+  """0: FALSE | 1: TRUE"""
+  isHidden: Int!
+  tags: [QuestionTag!]!
+  images: [QuestionImage!]!
+}
+
+"""user_question_actions"""
+type UserQuestionAction {
+  """0: NOTHING | 1: LIKE | 2: DISLIKE"""
+  actionType: Int!
+  question: Question!
+  user: User!
+}
+
 """users"""
 type User {
   id: ID!
@@ -35,6 +82,7 @@ type User {
   faceRecognitionModel: String
   secret_key: String
   userTokens: [UserToken!]!
+  questionActions: [UserQuestionAction!]!
 }
 
 type LoginResponseType {
