@@ -1,6 +1,5 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, MaxLength } from 'class-validator';
-import { GenderTypes } from 'src/common/enums/gender.enum';
 import { CommonMessage } from 'src/common/messages';
 
 @InputType()

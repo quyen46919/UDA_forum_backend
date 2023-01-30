@@ -9,6 +9,7 @@ type UserToken {
   token: String!
   refreshToken: String!
   expireAt: String!
+  refreshExpireAt: String!
   version: Int!
   description: String!
 
@@ -88,6 +89,9 @@ type User {
 
 type LoginResponseType {
   access_token: String!
+  access_token_expire_time: String!
+  refresh_token: String!
+  refresh_token_expire_time: String!
   user: User!
 }
 
@@ -124,6 +128,9 @@ type Mutation {
 
   """User register"""
   signup(createUserInput: CreateUserInput!): User!
+
+  """Refresh Token"""
+  refreshToken(refreshToken: String!): LoginResponseType!
 }
 
 input LoginInput {

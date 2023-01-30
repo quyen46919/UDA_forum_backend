@@ -23,11 +23,13 @@ export class UserQuestionAction
   @Field(() => Int, { description: '0: NOTHING | 1: LIKE | 2: DISLIKE' })
   actionType: ActionTypes = 0;
 
+  @Column({ name: 'question_id', type: 'varchar', length: 36 })
   @Field(() => Question)
   @OneToOne(() => Question, { primary: true })
   @JoinColumn()
   question: Question;
 
+  @Column({ name: 'user_id', type: 'varchar', length: 36 })
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.questionActions, { primary: true })
   user: User;

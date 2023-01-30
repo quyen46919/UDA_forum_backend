@@ -9,9 +9,10 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
 import { LoggerMiddleware } from './core/middlewares/logging.middleware';
 import { PostModule } from './modules/posts/post.module';
-import { UsersModule } from './modules/users/users.module';
+import { UserModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
+import { UserTokenModule } from './modules/user-tokens/user-token.module';
 // import { APP_FILTER } from '@nestjs/core';
 // import { ExceptionLoggerFilter } from './utils/exceptionLogger.filter';
 
@@ -19,7 +20,8 @@ import { JwtService } from '@nestjs/jwt';
   imports: [
     AuthModule,
     PostModule,
-    UsersModule,
+    UserModule,
+    UserTokenModule,
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL, {
       useNewUrlParser: true,

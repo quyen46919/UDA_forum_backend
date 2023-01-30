@@ -22,4 +22,4 @@ import { UserResolver } from './users.resolver';
   providers: [UserService, UserResolver],
   exports: [UserService],
 })
-export class UsersModule {}
+export class UserModule {}

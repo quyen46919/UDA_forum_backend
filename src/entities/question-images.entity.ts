@@ -20,6 +20,7 @@ export class QuestionImage extends AbstractEntity implements IQuestionImage {
   @Field(() => String)
   name: string;
 
+  @Column({ name: 'question_id', type: 'varchar', length: 36 })
   @Field(() => [Question])
   @ManyToOne(() => Question, (question) => question.images)
   question: Question;

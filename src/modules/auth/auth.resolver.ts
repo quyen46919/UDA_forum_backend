@@ -5,7 +5,7 @@ import { CreateUserInput } from '../users/dto/create-user-input.dto';
 import { AuthService } from './auth.service';
 import { LoginResponseType } from './dto/login-response.type';
 import { LoginInput } from './dto/login.input';
-import { UseGuards } from '@nestjs/common';
+import { Query, UseGuards } from '@nestjs/common';
 import { GraphqlGuard } from './graphql.guard';
 @Resolver()
 export class AuthResolver {
@@ -26,5 +26,10 @@ export class AuthResolver {
   @Mutation(() => User, { description: 'User register' })
   signup(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.authService.signup(createUserInput);
+  }
+
+  @Mutation(() => LoginResponseType, { description: 'Refresh Token' })
+  refreshToken(@Args('refreshToken') token: string) {
+    return this.authService.refreshToken(token);
   }
 }
