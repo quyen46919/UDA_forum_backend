@@ -1,5 +1,11 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
 import { RoleTypes } from '../common/enums/role.enum';
 import { TokenTypes } from '../common/enums/token.enum';
 import { AbstractEntity } from './abstract.entity';
@@ -11,8 +17,8 @@ export interface IUserToken {
   expireAt: Date;
   refreshExpireAt: Date;
   version: number;
-  description?: string;
   type: TokenTypes;
+  deletedAt: Date;
 }
 
 @Entity({ name: 'user_tokens' })
@@ -67,17 +73,16 @@ export class UserToken extends AbstractEntity implements IUserToken {
   version: number;
 
   @Column({
-    name: 'description',
-    length: 255,
-  })
-  @Field(() => String)
-  description?: string;
-
-  @Column({
     name: 'type',
     type: 'tinyint',
     comment: '0: ADMIN | 1: STUDENT | 2: LECTURE',
   })
   @Field(() => Int, { description: '0: ADMIN | 1: STUDENT | 2: LECTURE' })
   role: RoleTypes = 1;
+
+  @DeleteDateColumn({
+    type: 'timestamp',
+    name: 'deleted_at',
+  })
+  deletedAt: Date;
 }

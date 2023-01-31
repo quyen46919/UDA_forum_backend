@@ -4,6 +4,7 @@ export class CommonMessage {
   public static login_fail = 'Tài khoản hoặc mật khẩu không đúng';
   public static logged_account =
     'Tài khoản hiện đang đăng nhập ở một thiết bị khác';
+  public static not_log_in_account = 'Tài khoản chưa đăng nhập';
   public static invalid_token = 'Token không hợp lệ';
 
   static getMessageEmailExisted = () => `${this.email_existed}`;
@@ -13,4 +14,5 @@ export class CommonMessage {
   static getMessageLoginFail = () => `${this.login_fail}`;
   static getMessageLoggedAccount = () => `${this.logged_account}`;
   static getMessageInvalidToken = () => `${this.invalid_token}`;
+  static getMessageNotLogInAccount = () => `${this.invalid_token}`;
 }

@@ -33,17 +33,25 @@ export class AuthService {
       );
     }
 
-    const tokens = await this.generateToken(user);
+    const tokens = await this.generateToken(user, 0);
     return tokens;
   }
 
-  async signup(createUserInput: CreateUserInput) {
+  async logup(createUserInput: CreateUserInput) {
     return this.userService.create({
       ...createUserInput,
     });
   }
 
-  async generateToken(user: User, version = 0) {
+  async logout(userId: string) {
+    const token = await this.userTokenService.findOneValidToken(userId);
+
+    if (!token) return false;
+
+    return this.userTokenService.delete(token);
+  }
+
+  async generateToken(user: User, version: number, saveToDatabase = true) {
     const jwtTokenExpireTime = moment()
       .add(1, 'days')
       .format('YYYY-MM-DD HH:mm:ss');
@@ -72,16 +80,16 @@ export class AuthService {
       refresh_token: refreshJwtToken,
       refresh_token_expire_time: refreshTokenExpireTime,
     };
-    await this.userTokenService.create({
-      token: jwtToken,
-      refreshToken: refreshJwtToken,
-      expireAt: jwtTokenExpireTime,
-      refreshExpireAt: refreshTokenExpireTime,
-      version: version || 0,
-      type: TokenTypes.JWT,
-      description: '',
-      userId: user.id,
-    });
+    saveToDatabase &&
+      (await this.userTokenService.create({
+        token: jwtToken,
+        refreshToken: refreshJwtToken,
+        expireAt: jwtTokenExpireTime,
+        refreshExpireAt: refreshTokenExpireTime,
+        version: version || 0,
+        type: TokenTypes.JWT,
+        userId: user.id,
+      }));
 
     return tokens;
   }
@@ -89,18 +97,39 @@ export class AuthService {
   async refreshToken(token: string) {
     const userData = this.jwtService.decode(token);
     if (!userData) {
-      throw new CustomBadRequestException(
+      throw new CustomNotAuthorizedException(
         CommonMessage.getMessageInvalidToken(),
       );
     }
 
     // register new token with version increasement
     const user = await this.userService.findOneByEmail(userData['email']);
-    const existedToken = await this.userTokenService.findOneValidRefreshToken(
+    const existedToken = await this.userTokenService.findOneValidToken(
       userData?.sub,
       token,
     );
-    const newToken = await this.generateToken(user, existedToken.version + 1);
+
+    if (!existedToken) {
+      throw new CustomNotAuthorizedException(
+        CommonMessage.getMessageInvalidToken(),
+      );
+    }
+
+    const newToken = await this.generateToken(
+      user,
+      existedToken.version + 1,
+      false,
+    );
+
+    await this.userTokenService.update({
+      id: existedToken.id,
+      token: newToken.access_token,
+      expireAt: newToken.access_token_expire_time,
+      refreshToken: newToken.refresh_token,
+      refreshExpireAt: newToken.refresh_token_expire_time,
+      version: existedToken.version + 1,
+    });
+
     return newToken;
   }
 

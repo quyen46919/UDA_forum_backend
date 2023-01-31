@@ -1,11 +1,10 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { MaxLength } from 'class-validator';
-import { TokenTypes } from 'src/common/enums/token.enum';
 
 @InputType()
-export class CreateTokenInput {
+export class UpdateTokenInput {
   @Field(() => String)
-  userId: string;
+  id: string;
 
   @MaxLength(255)
   @Field(() => String)
@@ -23,7 +22,4 @@ export class CreateTokenInput {
 
   @Field(() => Int)
   version: number;
-
-  @Field(() => Int)
-  type: TokenTypes = 0;
 }
