@@ -94,6 +94,41 @@ type LoginResponseType {
   user: User!
 }
 
+type PageData {
+  count: Float!
+  limit: Float!
+  offset: Float!
+}
+
+type TagResponse {
+  page: TagConnection!
+  pageData: PageData
+}
+
+type TagConnection {
+  edges: [TagEdge!]
+  pageInfo: TagPageInfo
+}
+
+type TagEdge {
+  cursor: String
+  node: Tag
+}
+
+type TagPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
+"""answer_images"""
+type AnswerImage {
+  id: ID!
+  name: String!
+  answer: [Answer!]!
+}
+
 """answers"""
 type Answer {
   id: ID!
@@ -110,15 +145,21 @@ type Answer {
   images: [AnswerImage!]!
 }
 
-"""answer_images"""
-type AnswerImage {
-  id: ID!
-  name: String!
-  answer: [Answer!]!
-}
-
 type Query {
   users: [User!]!
+  tags(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+  ): TagResponse!
 }
 
 type Mutation {
@@ -133,6 +174,9 @@ type Mutation {
 
   """Log out"""
   logout(userId: String!): Boolean!
+
+  """Create tag"""
+  createTag(createTagInput: CreateTagInput!): Tag!
 }
 
 input LoginInput {
@@ -144,4 +188,10 @@ input CreateUserInput {
   fullName: String!
   email: String!
   password: String!
+}
+
+input CreateTagInput {
+  name: String!
+  logo: String!
+  description: String!
 }

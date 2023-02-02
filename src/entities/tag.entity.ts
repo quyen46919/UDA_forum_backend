@@ -41,6 +41,7 @@ export class Tag extends AbstractEntity implements ITag {
     name: 'is_hidden',
     type: 'tinyint',
     comment: '0: FALSE | 1: TRUE',
+    default: 0,
   })
   @Field(() => Int, { description: '0: FALSE | 1: TRUE' })
   isHidden: HiddenTypes = 0;

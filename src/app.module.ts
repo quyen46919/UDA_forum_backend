@@ -13,6 +13,7 @@ import { UserModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
 import { UserTokenModule } from './modules/user-tokens/user-token.module';
+import { TagModule } from './modules/tags/tag.module';
 // import { APP_FILTER } from '@nestjs/core';
 // import { ExceptionLoggerFilter } from './utils/exceptionLogger.filter';
 
@@ -22,6 +23,7 @@ import { UserTokenModule } from './modules/user-tokens/user-token.module';
     PostModule,
     UserModule,
     UserTokenModule,
+    TagModule,
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL, {
       useNewUrlParser: true,
