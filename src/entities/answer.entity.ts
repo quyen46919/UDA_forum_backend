@@ -1,9 +1,18 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { ExactnessTypes } from '../common/enums/exactness.enum';
 import { HiddenTypes } from '../common/enums/hidden.enum';
 import { AbstractEntity } from './abstract.entity';
 import { AnswerImage } from './answer-images.entity';
+import { UserAnswerAction } from './user-answer-action.entity';
+import { User } from './user.entity';
 
 export interface IAnswer {
   createUserId?: string;
@@ -20,14 +29,6 @@ export interface IAnswer {
 export class Answer extends AbstractEntity implements IAnswer {
   @Field(() => ID)
   id: string;
-
-  @Column({
-    name: 'create_user_id',
-    length: 255,
-    nullable: true,
-  })
-  @Field(() => String, { nullable: true })
-  createUserId?: string;
 
   @Column({
     type: 'longtext',
@@ -77,4 +78,20 @@ export class Answer extends AbstractEntity implements IAnswer {
     cascade: true,
   })
   images: AnswerImage[];
+
+  @Field(() => User)
+  @JoinColumn({ name: 'create_user_id' })
+  @ManyToOne(() => User, (user) => user.answers)
+  user: User;
+
+  @Column({
+    name: 'create_user_id',
+    type: 'varchar',
+    length: 36,
+  })
+  createUserId?: string;
+
+  @Field(() => [UserAnswerAction])
+  @OneToMany(() => UserAnswerAction, (actions) => actions.answer)
+  actions: UserAnswerAction[];
 }

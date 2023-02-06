@@ -21,4 +21,8 @@ export class TagService {
   async create(CreateTagInput: CreateTagInput) {
     return this.tagRepository.save(CreateTagInput);
   }
+
+  async findById(id: string) {
+    return this.tagRepository.findOne({ id });
+  }
 }

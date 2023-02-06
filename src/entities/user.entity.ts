@@ -5,6 +5,8 @@ import { AbstractEntity } from './abstract.entity';
 import { RoleTypes } from '../common/enums/role.enum';
 import { UserToken } from './user-token.entity';
 import { UserQuestionAction } from './user-question-action.entity';
+import { Question } from './question.entity';
+import { Answer } from './answer.entity';
 
 export interface IUser {
   fullName: string;
@@ -129,4 +131,12 @@ export class User extends AbstractEntity implements IUser {
     cascade: true,
   })
   questionActions: UserQuestionAction[];
+
+  @Field(() => [Question])
+  @OneToMany(() => Question, (question) => question.user, { cascade: true })
+  questions: Question[];
+
+  @Field(() => [Answer])
+  @OneToMany(() => Answer, (question) => question.user, { cascade: true })
+  answers: Answer[];
 }

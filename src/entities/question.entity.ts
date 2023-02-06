@@ -1,9 +1,18 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { HiddenTypes } from '../common/enums/hidden.enum';
 import { AbstractEntity } from './abstract.entity';
 import { QuestionImage } from './question-images.entity';
 import { QuestionTag } from './question-tag.entity';
+import { UserQuestionAction } from './user-question-action.entity';
+import { User } from './user.entity';
 
 export interface IQuestion {
   createUserId?: string;
@@ -20,14 +29,6 @@ export interface IQuestion {
 export class Question extends AbstractEntity implements IQuestion {
   @Field(() => ID)
   id: string;
-
-  @Column({
-    name: 'create_user_id',
-    length: 255,
-    nullable: true,
-  })
-  @Field(() => String, { nullable: true })
-  createUserId?: string;
 
   @Column({
     name: 'title',
@@ -72,15 +73,27 @@ export class Question extends AbstractEntity implements IQuestion {
   deletedAt: Date;
 
   // relationships
-  @Field(() => [QuestionTag])
-  @OneToMany(() => QuestionTag, (questionTag) => questionTag.question, {
-    cascade: true,
+  @Field(() => User)
+  @JoinColumn({ name: 'create_user_id' })
+  @ManyToOne(() => User, (user) => user.questions)
+  user: User;
+
+  @Column({
+    name: 'create_user_id',
+    type: 'varchar',
+    length: 36,
   })
-  tags: QuestionTag[];
+  createUserId: string;
+
+  @Field(() => [QuestionTag])
+  @OneToMany(() => QuestionTag, (questionTag) => questionTag.question)
+  tags: Promise<QuestionTag[]>;
 
   @Field(() => [QuestionImage])
-  @OneToMany(() => QuestionImage, (questionImage) => questionImage.question, {
-    cascade: true,
-  })
-  images: QuestionImage[];
+  @OneToMany(() => QuestionImage, (questionImage) => questionImage.question)
+  images: Promise<QuestionImage[]>;
+
+  @Field(() => [UserQuestionAction])
+  @OneToMany(() => UserQuestionAction, (action) => action.question)
+  actions: Promise<UserQuestionAction[]>;
 }

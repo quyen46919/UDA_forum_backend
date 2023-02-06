@@ -14,6 +14,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
 import { UserTokenModule } from './modules/user-tokens/user-token.module';
 import { TagModule } from './modules/tags/tag.module';
+import { QuestionModule } from './modules/questions/question.module';
+import { QuestionTagModule } from './modules/question-tags/question-tag.module';
+import { UserQuestionActionModule } from './modules/user-question-actions/user-question-action.module';
 // import { APP_FILTER } from '@nestjs/core';
 // import { ExceptionLoggerFilter } from './utils/exceptionLogger.filter';
 
@@ -24,6 +27,9 @@ import { TagModule } from './modules/tags/tag.module';
     UserModule,
     UserTokenModule,
     TagModule,
+    QuestionModule,
+    QuestionTagModule,
+    UserQuestionActionModule,
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL, {
       useNewUrlParser: true,

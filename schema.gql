@@ -36,14 +36,13 @@ type Tag {
 
 """question_tags"""
 type QuestionTag {
+  id: ID!
   tag: Tag!
-  question: Question!
 }
 
 """questions"""
 type Question {
   id: ID!
-  createUserId: String
   title: String!
   content: String!
   count: Int!
@@ -51,8 +50,10 @@ type Question {
 
   """0: FALSE | 1: TRUE"""
   isHidden: Int!
+  user: User!
   tags: [QuestionTag!]!
   images: [QuestionImage!]!
+  actions: [UserQuestionAction!]!
 }
 
 """user_question_actions"""
@@ -61,6 +62,38 @@ type UserQuestionAction {
   actionType: Int!
   question: Question!
   user: User!
+}
+
+"""answer_images"""
+type AnswerImage {
+  id: ID!
+  name: String!
+  answer: [Answer!]!
+}
+
+"""user_answer_actions"""
+type UserAnswerAction {
+  """0: NOTHING | 1: LIKE | 2: DISLIKE"""
+  actionType: Int!
+  answer: Answer!
+  user: User!
+}
+
+"""answers"""
+type Answer {
+  id: ID!
+  content: String!
+  count: Int!
+  documentLink: String!
+
+  """0: NOTHING | 1: WRONG | 2: CORRECT"""
+  isCorrectAnswer: Int!
+
+  """0: FALSE | 1: TRUE"""
+  isHidden: Int!
+  images: [AnswerImage!]!
+  user: User!
+  actions: [UserAnswerAction!]!
 }
 
 """users"""
@@ -84,6 +117,8 @@ type User {
   secret_key: String
   userTokens: [UserToken!]!
   questionActions: [UserQuestionAction!]!
+  questions: [Question!]!
+  answers: [Answer!]!
 }
 
 type LoginResponseType {
@@ -122,27 +157,26 @@ type TagPageInfo {
   hasNextPage: Boolean
 }
 
-"""answer_images"""
-type AnswerImage {
-  id: ID!
-  name: String!
-  answer: [Answer!]!
+type QuestionResponse {
+  page: QuestionConnection!
+  pageData: PageData
 }
 
-"""answers"""
-type Answer {
-  id: ID!
-  createUserId: String
-  content: String!
-  count: Int!
-  documentLink: String!
+type QuestionConnection {
+  edges: [QuestionEdge!]
+  pageInfo: QuestionPageInfo
+}
 
-  """0: NOTHING | 1: WRONG | 2: CORRECT"""
-  isCorrectAnswer: Int!
+type QuestionEdge {
+  cursor: String
+  node: Question
+}
 
-  """0: FALSE | 1: TRUE"""
-  isHidden: Int!
-  images: [AnswerImage!]!
+type QuestionPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
 }
 
 type Query {
@@ -160,6 +194,19 @@ type Query {
     """Paginate last"""
     last: Float
   ): TagResponse!
+  questions(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+  ): QuestionResponse!
 }
 
 type Mutation {
@@ -177,6 +224,12 @@ type Mutation {
 
   """Create tag"""
   createTag(createTagInput: CreateTagInput!): Tag!
+
+  """Create new question"""
+  createQuestion(createQuestionInput: CreateQuestionInput!): Question!
+
+  """actionType: 0: NOTHING | 1: LIKE | 2: DISLIKE"""
+  reactQuestion(reactionInput: ReactionInput!): UserQuestionAction!
 }
 
 input LoginInput {
@@ -194,4 +247,19 @@ input CreateTagInput {
   name: String!
   logo: String!
   description: String!
+}
+
+input CreateQuestionInput {
+  createUserId: String!
+  title: String!
+  content: String!
+  githubLink: String!
+  isHidden: String = "0"
+  tags: [String!]!
+}
+
+input ReactionInput {
+  userId: String!
+  questionId: String!
+  actionType: Int!
 }
