@@ -23,7 +23,7 @@ export class QuestionImage extends AbstractEntity implements IQuestionImage {
   @Field(() => [Question])
   @ManyToOne(() => Question, (question) => question.images)
   @JoinColumn({ name: 'question_id' })
-  question: Question;
+  question: Promise<Question>;
 
   @Column({ name: 'question_id', type: 'varchar', length: 36 })
   questionId: string;

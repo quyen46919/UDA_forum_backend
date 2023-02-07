@@ -3,14 +3,14 @@ import { MaxLength } from 'class-validator';
 import { ActionTypes } from 'src/common/enums/action.enum';
 
 @InputType()
-export class ReactionInput {
+export class ReactionAnswerInput {
   @MaxLength(36)
   @Field(() => String)
   userId: string;
 
   @MaxLength(36)
   @Field(() => String)
-  questionId: string;
+  answerId: string;
 
   @Field(() => Int)
   actionType: ActionTypes;

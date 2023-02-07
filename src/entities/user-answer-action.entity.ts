@@ -26,7 +26,7 @@ export class UserAnswerAction
   @Field(() => Answer)
   @ManyToOne(() => Answer, (answer) => answer.actions)
   @JoinColumn({ name: 'answer_id' })
-  answer: Answer;
+  answer: Promise<Answer>;
 
   @Column({
     name: 'answer_id',
@@ -36,9 +36,9 @@ export class UserAnswerAction
   answerId: string;
 
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.questionActions, { primary: true })
+  @ManyToOne(() => User, (user) => user.answerActions)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Promise<User>;
 
   @Column({
     name: 'user_id',

@@ -6,11 +6,13 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { ExactnessTypes } from '../common/enums/exactness.enum';
 import { HiddenTypes } from '../common/enums/hidden.enum';
 import { AbstractEntity } from './abstract.entity';
 import { AnswerImage } from './answer-images.entity';
+import { Question } from './question.entity';
 import { UserAnswerAction } from './user-answer-action.entity';
 import { User } from './user.entity';
 
@@ -18,7 +20,7 @@ export interface IAnswer {
   createUserId?: string;
   content: string;
   count: number;
-  documentLink: string;
+  documentLink?: string;
   isCorrectAnswer: ExactnessTypes;
   isHidden: HiddenTypes;
   deletedAt: Date;
@@ -46,14 +48,16 @@ export class Answer extends AbstractEntity implements IAnswer {
   @Column({
     name: 'document_link',
     length: 255,
+    default: '',
   })
   @Field(() => String)
-  documentLink: string;
+  documentLink?: string;
 
   @Column({
     name: 'is_correct_answer',
     type: 'tinyint',
     comment: '0: NOTHING | 1: WRONG | 2: CORRECT',
+    default: 0,
   })
   @Field(() => Int, { description: '0: NOTHING | 1: WRONG | 2: CORRECT' })
   isCorrectAnswer: ExactnessTypes = 0;
@@ -77,12 +81,12 @@ export class Answer extends AbstractEntity implements IAnswer {
   @OneToMany(() => AnswerImage, (questionImage) => questionImage.answer, {
     cascade: true,
   })
-  images: AnswerImage[];
+  images: Promise<AnswerImage[]>;
 
   @Field(() => User)
   @JoinColumn({ name: 'create_user_id' })
   @ManyToOne(() => User, (user) => user.answers)
-  user: User;
+  user: Promise<User>;
 
   @Column({
     name: 'create_user_id',
@@ -93,5 +97,30 @@ export class Answer extends AbstractEntity implements IAnswer {
 
   @Field(() => [UserAnswerAction])
   @OneToMany(() => UserAnswerAction, (actions) => actions.answer)
-  actions: UserAnswerAction[];
+  actions: Promise<UserAnswerAction[]>;
+
+  @Field(() => Answer)
+  @OneToOne(() => Answer, (answer) => answer.id)
+  @JoinColumn({ name: 'answer_id' })
+  parentAnswer: Promise<Answer>;
+
+  @Column({
+    name: 'answer_id',
+    type: 'varchar',
+    length: 36,
+    nullable: true,
+  })
+  parentAnswerId?: string;
+
+  @Field(() => Question)
+  @JoinColumn({ name: 'question_id' })
+  @ManyToOne(() => Question, (question) => question.answers)
+  question: Promise<Question>;
+
+  @Column({
+    name: 'question_id',
+    type: 'varchar',
+    length: 36,
+  })
+  questionId: string;
 }

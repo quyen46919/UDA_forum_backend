@@ -18,7 +18,6 @@ export class QuestionTag extends AbstractEntity {
   @Column({ name: 'tag_id', type: 'varchar', length: 36 })
   tagId: string;
 
-  // @Field(() => Question)
   @ManyToOne(() => Question, (question) => question.tags)
   @JoinColumn({ name: 'question_id' })
   question: Promise<Question>;

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserQuestionAction } from 'src/entities/user-question-action.entity';
 import { Repository } from 'typeorm/repository/Repository';
-import { ReactionInput } from './dto/reaction.dto';
+import { ReactionQuestionInput } from './dto/reaction-question-input.dto';
 
 @Injectable()
 export class UserQuestionActionService {
@@ -11,7 +11,7 @@ export class UserQuestionActionService {
     private userQuestionActionRepository: Repository<UserQuestionAction>,
   ) {}
 
-  async interactWithQuestion(reaction: ReactionInput) {
+  async interactWithQuestion(reaction: ReactionQuestionInput) {
     const savedReaction = await this.userQuestionActionRepository.findOne({
       questionId: reaction.questionId,
       userId: reaction.userId,

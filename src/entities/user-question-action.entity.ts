@@ -26,7 +26,7 @@ export class UserQuestionAction
   @Field(() => Question)
   @ManyToOne(() => Question, (question) => question.actions)
   @JoinColumn({ name: 'question_id' })
-  question: Question;
+  question: Promise<Question>;
 
   @Column({ name: 'question_id', type: 'varchar', length: 36 })
   questionId: string;
@@ -34,7 +34,7 @@ export class UserQuestionAction
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.questionActions)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Promise<User>;
 
   @Column({ name: 'user_id', type: 'varchar', length: 36 })
   userId: string;

@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { HiddenTypes } from '../common/enums/hidden.enum';
 import { AbstractEntity } from './abstract.entity';
+import { Answer } from './answer.entity';
 import { QuestionImage } from './question-images.entity';
 import { QuestionTag } from './question-tag.entity';
 import { UserQuestionAction } from './user-question-action.entity';
@@ -96,4 +97,8 @@ export class Question extends AbstractEntity implements IQuestion {
   @Field(() => [UserQuestionAction])
   @OneToMany(() => UserQuestionAction, (action) => action.question)
   actions: Promise<UserQuestionAction[]>;
+
+  @Field(() => [Answer])
+  @OneToMany(() => Answer, (answer) => answer.question)
+  answers: Promise<Answer[]>;
 }

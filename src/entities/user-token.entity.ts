@@ -31,7 +31,7 @@ export class UserToken extends AbstractEntity implements IUserToken {
   @Field(() => User)
   @JoinColumn({ name: 'user_id' })
   @ManyToOne(() => User, (user) => user.userTokens)
-  user: User;
+  user: Promise<User>;
 
   @Column({ name: 'user_id', type: 'varchar', length: 36 })
   userId: string;

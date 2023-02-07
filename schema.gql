@@ -16,6 +16,40 @@ type UserToken {
   role: Int!
 }
 
+"""answer_images"""
+type AnswerImage {
+  id: ID!
+  name: String!
+  answer: [Answer!]!
+}
+
+"""user_answer_actions"""
+type UserAnswerAction {
+  """0: NOTHING | 1: LIKE | 2: DISLIKE"""
+  actionType: Int!
+  answer: Answer!
+  user: User!
+}
+
+"""answers"""
+type Answer {
+  id: ID!
+  content: String!
+  count: Int!
+  documentLink: String!
+
+  """0: NOTHING | 1: WRONG | 2: CORRECT"""
+  isCorrectAnswer: Int!
+
+  """0: FALSE | 1: TRUE"""
+  isHidden: Int!
+  images: [AnswerImage!]!
+  user: User!
+  actions: [UserAnswerAction!]!
+  parentAnswer: Answer!
+  question: Question!
+}
+
 """question_images"""
 type QuestionImage {
   id: ID!
@@ -54,6 +88,7 @@ type Question {
   tags: [QuestionTag!]!
   images: [QuestionImage!]!
   actions: [UserQuestionAction!]!
+  answers: [Answer!]!
 }
 
 """user_question_actions"""
@@ -62,38 +97,6 @@ type UserQuestionAction {
   actionType: Int!
   question: Question!
   user: User!
-}
-
-"""answer_images"""
-type AnswerImage {
-  id: ID!
-  name: String!
-  answer: [Answer!]!
-}
-
-"""user_answer_actions"""
-type UserAnswerAction {
-  """0: NOTHING | 1: LIKE | 2: DISLIKE"""
-  actionType: Int!
-  answer: Answer!
-  user: User!
-}
-
-"""answers"""
-type Answer {
-  id: ID!
-  content: String!
-  count: Int!
-  documentLink: String!
-
-  """0: NOTHING | 1: WRONG | 2: CORRECT"""
-  isCorrectAnswer: Int!
-
-  """0: FALSE | 1: TRUE"""
-  isHidden: Int!
-  images: [AnswerImage!]!
-  user: User!
-  actions: [UserAnswerAction!]!
 }
 
 """users"""
@@ -117,6 +120,7 @@ type User {
   secret_key: String
   userTokens: [UserToken!]!
   questionActions: [UserQuestionAction!]!
+  answerActions: [UserAnswerAction!]!
   questions: [Question!]!
   answers: [Answer!]!
 }
@@ -179,6 +183,28 @@ type QuestionPageInfo {
   hasNextPage: Boolean
 }
 
+type AnswerResponse {
+  page: AnswerConnection!
+  pageData: PageData
+}
+
+type AnswerConnection {
+  edges: [AnswerEdge!]
+  pageInfo: AnswerPageInfo
+}
+
+type AnswerEdge {
+  cursor: String
+  node: Answer
+}
+
+type AnswerPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
 type Query {
   users: [User!]!
   tags(
@@ -207,6 +233,22 @@ type Query {
     """Paginate last"""
     last: Float
   ): QuestionResponse!
+
+  """Find all answers by question id"""
+  answers(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+    questionId: ID!
+  ): AnswerResponse!
 }
 
 type Mutation {
@@ -229,7 +271,11 @@ type Mutation {
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
 
   """actionType: 0: NOTHING | 1: LIKE | 2: DISLIKE"""
-  reactQuestion(reactionInput: ReactionInput!): UserQuestionAction!
+  reactQuestion(reactionInput: ReactionQuestionInput!): UserQuestionAction!
+  createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
+
+  """actionType: 0: NOTHING | 1: LIKE | 2: DISLIKE"""
+  reactAnswer(reactionInput: ReactionAnswerInput!): UserAnswerAction!
 }
 
 input LoginInput {
@@ -258,8 +304,22 @@ input CreateQuestionInput {
   tags: [String!]!
 }
 
-input ReactionInput {
+input ReactionQuestionInput {
   userId: String!
   questionId: String!
+  actionType: Int!
+}
+
+input CreateAnswerInput {
+  content: String!
+  documentLink: String
+  createUserId: String!
+  questionId: String!
+  answerId: String
+}
+
+input ReactionAnswerInput {
+  userId: String!
+  answerId: String!
   actionType: Int!
 }

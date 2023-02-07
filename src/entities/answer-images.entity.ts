@@ -23,5 +23,5 @@ export class AnswerImage extends AbstractEntity implements IAnswerImage {
   @Column({ name: 'answer_id', type: 'varchar', length: 36 })
   @Field(() => [Answer])
   @ManyToOne(() => Answer, (answer) => answer.images)
-  answer: Answer;
+  answer: Promise<Answer>;
 }
