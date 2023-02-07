@@ -8,6 +8,7 @@ import { UserQuestionAction } from './user-question-action.entity';
 import { Question } from './question.entity';
 import { Answer } from './answer.entity';
 import { UserAnswerAction } from './user-answer-action.entity';
+import { Image } from './image.entity';
 
 export interface IUser {
   fullName: string;
@@ -146,4 +147,8 @@ export class User extends AbstractEntity implements IUser {
   @Field(() => [Answer])
   @OneToMany(() => Answer, (question) => question.user, { cascade: true })
   answers: Promise<Answer[]>;
+
+  @Field(() => [Image])
+  @OneToMany(() => Image, (image) => image.user)
+  images: Promise<Image[]>;
 }

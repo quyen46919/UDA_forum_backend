@@ -19,6 +19,7 @@ import { QuestionTagModule } from './modules/question-tags/question-tag.module';
 import { UserQuestionActionModule } from './modules/user-question-actions/user-question-action.module';
 import { AnswerModule } from './modules/answers/answer.module';
 import { UserAnswerActionModule } from './modules/user-answer-actions/user-answer-action.module';
+import { ImageModule } from './modules/images/images.module';
 // import { APP_FILTER } from '@nestjs/core';
 // import { ExceptionLoggerFilter } from './utils/exceptionLogger.filter';
 
@@ -34,6 +35,7 @@ import { UserAnswerActionModule } from './modules/user-answer-actions/user-answe
     UserQuestionActionModule,
     AnswerModule,
     UserAnswerActionModule,
+    ImageModule,
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL, {
       useNewUrlParser: true,
