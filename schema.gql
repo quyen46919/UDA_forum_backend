@@ -16,6 +16,7 @@ type UserToken {
   role: Int!
 }
 
+<<<<<<< HEAD
 """answer_images"""
 type AnswerImage {
   id: ID!
@@ -50,6 +51,8 @@ type Answer {
   question: Question!
 }
 
+=======
+>>>>>>> master
 """question_images"""
 type QuestionImage {
   id: ID!
@@ -70,13 +73,22 @@ type Tag {
 
 """question_tags"""
 type QuestionTag {
+<<<<<<< HEAD
   id: ID!
   tag: Tag!
+=======
+  tag: Tag!
+  question: Question!
+>>>>>>> master
 }
 
 """questions"""
 type Question {
   id: ID!
+<<<<<<< HEAD
+=======
+  createUserId: String
+>>>>>>> master
   title: String!
   content: String!
   count: Int!
@@ -84,11 +96,16 @@ type Question {
 
   """0: FALSE | 1: TRUE"""
   isHidden: Int!
+<<<<<<< HEAD
   user: User!
   tags: [QuestionTag!]!
   images: [QuestionImage!]!
   actions: [UserQuestionAction!]!
   answers: [Answer!]!
+=======
+  tags: [QuestionTag!]!
+  images: [QuestionImage!]!
+>>>>>>> master
 }
 
 """user_question_actions"""
@@ -99,6 +116,7 @@ type UserQuestionAction {
   user: User!
 }
 
+<<<<<<< HEAD
 """Images"""
 type Image {
   id: ID!
@@ -110,6 +128,8 @@ type Image {
   user: User!
 }
 
+=======
+>>>>>>> master
 """users"""
 type User {
   id: ID!
@@ -131,10 +151,13 @@ type User {
   secret_key: String
   userTokens: [UserToken!]!
   questionActions: [UserQuestionAction!]!
+<<<<<<< HEAD
   answerActions: [UserAnswerAction!]!
   questions: [Question!]!
   answers: [Answer!]!
   images: [Image!]!
+=======
+>>>>>>> master
 }
 
 type LoginResponseType {
