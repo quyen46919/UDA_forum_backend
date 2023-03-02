@@ -24,11 +24,18 @@ export class UserQuestionAction
   actionType: ActionTypes = 0;
 
   @Field(() => Question)
-  @OneToOne(() => Question, { primary: true })
-  @JoinColumn()
-  question: Question;
+  @ManyToOne(() => Question, (question) => question.actions)
+  @JoinColumn({ name: 'question_id' })
+  question: Promise<Question>;
+
+  @Column({ name: 'question_id', type: 'varchar', length: 36 })
+  questionId: string;
 
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.questionActions, { primary: true })
-  user: User;
+  @ManyToOne(() => User, (user) => user.questionActions)
+  @JoinColumn({ name: 'user_id' })
+  user: Promise<User>;
+
+  @Column({ name: 'user_id', type: 'varchar', length: 36 })
+  userId: string;
 }

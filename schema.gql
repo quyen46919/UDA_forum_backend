@@ -8,13 +8,51 @@ type UserToken {
   user: User!
   token: String!
   refreshToken: String!
+  expireAt: String!
+  refreshExpireAt: String!
   version: Int!
-  description: String!
 
   """0: ADMIN | 1: STUDENT | 2: LECTURE"""
   role: Int!
 }
 
+<<<<<<< HEAD
+"""answer_images"""
+type AnswerImage {
+  id: ID!
+  name: String!
+  answer: [Answer!]!
+}
+
+"""user_answer_actions"""
+type UserAnswerAction {
+  """0: NOTHING | 1: LIKE | 2: DISLIKE"""
+  actionType: Int!
+  answer: Answer!
+  user: User!
+}
+
+"""answers"""
+type Answer {
+  id: ID!
+  content: String!
+  count: Int!
+  documentLink: String!
+
+  """0: NOTHING | 1: WRONG | 2: CORRECT"""
+  isCorrectAnswer: Int!
+
+  """0: FALSE | 1: TRUE"""
+  isHidden: Int!
+  images: [AnswerImage!]!
+  user: User!
+  actions: [UserAnswerAction!]!
+  parentAnswer: Answer!
+  question: Question!
+}
+
+=======
+>>>>>>> master
 """question_images"""
 type QuestionImage {
   id: ID!
@@ -35,14 +73,22 @@ type Tag {
 
 """question_tags"""
 type QuestionTag {
+<<<<<<< HEAD
+  id: ID!
+  tag: Tag!
+=======
   tag: Tag!
   question: Question!
+>>>>>>> master
 }
 
 """questions"""
 type Question {
   id: ID!
+<<<<<<< HEAD
+=======
   createUserId: String
+>>>>>>> master
   title: String!
   content: String!
   count: Int!
@@ -50,8 +96,16 @@ type Question {
 
   """0: FALSE | 1: TRUE"""
   isHidden: Int!
+<<<<<<< HEAD
+  user: User!
   tags: [QuestionTag!]!
   images: [QuestionImage!]!
+  actions: [UserQuestionAction!]!
+  answers: [Answer!]!
+=======
+  tags: [QuestionTag!]!
+  images: [QuestionImage!]!
+>>>>>>> master
 }
 
 """user_question_actions"""
@@ -62,6 +116,20 @@ type UserQuestionAction {
   user: User!
 }
 
+<<<<<<< HEAD
+"""Images"""
+type Image {
+  id: ID!
+  name: String!
+  alt: String!
+  description: String!
+  blurHash: String!
+  urlLink: String!
+  user: User!
+}
+
+=======
+>>>>>>> master
 """users"""
 type User {
   id: ID!
@@ -83,15 +151,147 @@ type User {
   secret_key: String
   userTokens: [UserToken!]!
   questionActions: [UserQuestionAction!]!
+<<<<<<< HEAD
+  answerActions: [UserAnswerAction!]!
+  questions: [Question!]!
+  answers: [Answer!]!
+  images: [Image!]!
+=======
+>>>>>>> master
 }
 
 type LoginResponseType {
   access_token: String!
+  access_token_expire_time: String!
+  refresh_token: String!
+  refresh_token_expire_time: String!
   user: User!
+}
+
+type PageData {
+  count: Float!
+  limit: Float!
+  offset: Float!
+}
+
+type TagResponse {
+  page: TagConnection!
+  pageData: PageData
+}
+
+type TagConnection {
+  edges: [TagEdge!]
+  pageInfo: TagPageInfo
+}
+
+type TagEdge {
+  cursor: String
+  node: Tag
+}
+
+type TagPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
+type QuestionResponse {
+  page: QuestionConnection!
+  pageData: PageData
+}
+
+type QuestionConnection {
+  edges: [QuestionEdge!]
+  pageInfo: QuestionPageInfo
+}
+
+type QuestionEdge {
+  cursor: String
+  node: Question
+}
+
+type QuestionPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
+type AnswerResponse {
+  page: AnswerConnection!
+  pageData: PageData
+}
+
+type AnswerConnection {
+  edges: [AnswerEdge!]
+  pageInfo: AnswerPageInfo
+}
+
+type AnswerEdge {
+  cursor: String
+  node: Answer
+}
+
+type AnswerPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
+type ImageResponseType {
+  uploadFile: Boolean!
+  name: String!
+  image: Image!
 }
 
 type Query {
   users: [User!]!
+  tags(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+  ): TagResponse!
+  questions(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+  ): QuestionResponse!
+
+  """Find all answers by question id"""
+  answers(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+    questionId: ID!
+  ): AnswerResponse!
+  files: [Image!]!
+  file(id: String!): Image!
 }
 
 type Mutation {
@@ -100,6 +300,37 @@ type Mutation {
 
   """User register"""
   signup(createUserInput: CreateUserInput!): User!
+
+  """Refresh Token"""
+  refreshToken(refreshToken: String!): LoginResponseType!
+
+  """Log out"""
+  logout(userId: String!): Boolean!
+
+  """Create tag"""
+  createTag(createTagInput: CreateTagInput!): Tag!
+
+  """Create new question"""
+  createQuestion(createQuestionInput: CreateQuestionInput!): Question!
+
+  """actionType: 0: NOTHING | 1: LIKE | 2: DISLIKE"""
+  reactQuestion(reactionInput: ReactionQuestionInput!): UserQuestionAction!
+  createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
+
+  """actionType: 0: NOTHING | 1: LIKE | 2: DISLIKE"""
+  reactAnswer(reactionInput: ReactionAnswerInput!): UserAnswerAction!
+
+  """Example upload single file"""
+  uploadFile(file: Upload, imageInfor: CreateImageInput!): ImageResponseType!
+
+  """Save file path"""
+  createFile(createFileInput: CreateImageInput!): Image!
+
+  """Update file path"""
+  updateFile(updateFileInput: UpdateImageInput!): Image!
+
+  """Delete file"""
+  removeFile(id: String!): Image!
 }
 
 input LoginInput {
@@ -111,4 +342,61 @@ input CreateUserInput {
   fullName: String!
   email: String!
   password: String!
+}
+
+input CreateTagInput {
+  name: String!
+  logo: String!
+  description: String!
+}
+
+input CreateQuestionInput {
+  createUserId: String!
+  title: String!
+  content: String!
+  githubLink: String!
+  isHidden: String = "0"
+  tags: [String!]!
+}
+
+input ReactionQuestionInput {
+  userId: String!
+  questionId: String!
+  actionType: Int!
+}
+
+input CreateAnswerInput {
+  content: String!
+  documentLink: String
+  createUserId: String!
+  questionId: String!
+  answerId: String
+}
+
+input ReactionAnswerInput {
+  userId: String!
+  answerId: String!
+  actionType: Int!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input CreateImageInput {
+  name: String!
+  alt: String!
+  urlLink: String
+  description: String
+  blurHash: String
+  createUserId: ID!
+}
+
+input UpdateImageInput {
+  name: String
+  alt: String
+  urlLink: String
+  description: String
+  blurHash: String
+  createUserId: ID
+  id: String!
 }

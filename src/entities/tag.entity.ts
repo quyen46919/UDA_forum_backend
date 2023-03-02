@@ -1,7 +1,8 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { HiddenTypes } from '../common/enums/hidden.enum';
-import { Column, Entity } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
+import { QuestionTag } from './question-tag.entity';
 
 export interface ITag {
   name: string;
@@ -41,7 +42,11 @@ export class Tag extends AbstractEntity implements ITag {
     name: 'is_hidden',
     type: 'tinyint',
     comment: '0: FALSE | 1: TRUE',
+    default: 0,
   })
   @Field(() => Int, { description: '0: FALSE | 1: TRUE' })
   isHidden: HiddenTypes = 0;
+
+  @OneToMany(() => QuestionTag, (questionTag) => questionTag.tag)
+  questionTag: Promise<QuestionTag[]>;
 }

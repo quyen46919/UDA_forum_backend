@@ -1,7 +1,9 @@
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 // import { UserSubscriber } from './src/entity-subscribers/user-subscriber';
-// import { SnakeNamingStrategy } from './src/snake-naming.strategy';
+const SnakeNamingStrategy =
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('typeorm-naming-strategies').SnakeNamingStrategy;
 
 const configs: TypeOrmModuleOptions & { seeds: string[]; factories: string[] } =
   {
@@ -20,6 +22,7 @@ const configs: TypeOrmModuleOptions & { seeds: string[]; factories: string[] } =
     migrations: ['src/database/migrations/*{.ts,.js}'],
     seeds: ['src/database/seeds/**/*{.ts,.js}'],
     factories: ['src/database/factories/**/*{.ts,.js}'],
+    namingStrategy: new SnakeNamingStrategy(),
   };
 
 module.exports = configs;

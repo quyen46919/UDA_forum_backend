@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from '../users/users.module';
+import { UserModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { SharedModule } from 'src/shared/types/shared.module';
 import { JwtConstants } from 'src/shared/services/jwt-constants';
@@ -8,10 +8,12 @@ import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
+import { UserTokenModule } from '../user-tokens/user-token.module';
 
 @Module({
   imports: [
-    UsersModule,
+    UserModule,
+    UserTokenModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [SharedModule],

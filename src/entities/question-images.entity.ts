@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { Question } from './question.entity';
 
@@ -22,5 +22,9 @@ export class QuestionImage extends AbstractEntity implements IQuestionImage {
 
   @Field(() => [Question])
   @ManyToOne(() => Question, (question) => question.images)
-  question: Question;
+  @JoinColumn({ name: 'question_id' })
+  question: Promise<Question>;
+
+  @Column({ name: 'question_id', type: 'varchar', length: 36 })
+  questionId: string;
 }

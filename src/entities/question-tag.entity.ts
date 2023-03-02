@@ -1,5 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { Question } from './question.entity';
 import { Tag } from './tag.entity';
@@ -7,12 +7,21 @@ import { Tag } from './tag.entity';
 @Entity({ name: 'question_tags' })
 @ObjectType({ description: 'question_tags' })
 export class QuestionTag extends AbstractEntity {
-  @Field(() => Tag)
-  @OneToOne(() => Tag, { primary: true })
-  @JoinColumn()
-  tag: Tag;
+  @Field(() => ID)
+  id: string;
 
-  @Field(() => Question)
-  @ManyToOne(() => Question, (question) => question.tags, { primary: true })
-  question: Question;
+  @Field(() => Tag)
+  @ManyToOne(() => Tag, (tag) => tag.questionTag)
+  @JoinColumn({ name: 'tag_id' })
+  tag: Promise<Tag>;
+
+  @Column({ name: 'tag_id', type: 'varchar', length: 36 })
+  tagId: string;
+
+  @ManyToOne(() => Question, (question) => question.tags)
+  @JoinColumn({ name: 'question_id' })
+  question: Promise<Question>;
+
+  @Column({ name: 'question_id', type: 'varchar', length: 36 })
+  questionId: string;
 }

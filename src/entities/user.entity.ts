@@ -5,6 +5,10 @@ import { AbstractEntity } from './abstract.entity';
 import { RoleTypes } from '../common/enums/role.enum';
 import { UserToken } from './user-token.entity';
 import { UserQuestionAction } from './user-question-action.entity';
+import { Question } from './question.entity';
+import { Answer } from './answer.entity';
+import { UserAnswerAction } from './user-answer-action.entity';
+import { Image } from './image.entity';
 
 export interface IUser {
   fullName: string;
@@ -122,11 +126,29 @@ export class User extends AbstractEntity implements IUser {
   // relationships
   @Field(() => [UserToken])
   @OneToMany(() => UserToken, (tokens) => tokens.user, { cascade: true })
-  userTokens: UserToken[];
+  userTokens: Promise<UserToken[]>;
 
   @Field(() => [UserQuestionAction])
   @OneToMany(() => UserQuestionAction, (actions) => actions.user, {
     cascade: true,
   })
-  questionActions: UserQuestionAction[];
+  questionActions: Promise<UserQuestionAction[]>;
+
+  @Field(() => [UserAnswerAction])
+  @OneToMany(() => UserAnswerAction, (actions) => actions.user, {
+    cascade: true,
+  })
+  answerActions: Promise<UserAnswerAction[]>;
+
+  @Field(() => [Question])
+  @OneToMany(() => Question, (question) => question.user, { cascade: true })
+  questions: Promise<Question[]>;
+
+  @Field(() => [Answer])
+  @OneToMany(() => Answer, (question) => question.user, { cascade: true })
+  answers: Promise<Answer[]>;
+
+  @Field(() => [Image])
+  @OneToMany(() => Image, (image) => image.user)
+  images: Promise<Image[]>;
 }

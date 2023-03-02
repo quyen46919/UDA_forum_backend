@@ -7,11 +7,15 @@ const iv = randomBytes(16);
 @Injectable()
 export class JwtConstants {
   get secret(): string {
-    return process.env.JWT_SECRET || '123456';
+    return process.env.JWT_SECRET || '12d1sd2adsaewr';
   }
 
   get expiresIn(): string {
-    return process.env.JWT_EXPIRESIN || '7d';
+    return process.env.JWT_EXPIRESIN || '1d';
+  }
+
+  getRefreshExpireTime(): string {
+    return process.env.REFRESH_JWT_EXPIREIN || '7d';
   }
 
   encrypt(text: any) {
