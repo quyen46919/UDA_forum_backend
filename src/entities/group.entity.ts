@@ -3,7 +3,9 @@ import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { GroupAttendance } from './group-attendance.entity';
 import { GroupBoard } from './group-board.entity';
+import { GroupEvent } from './group-event.entity';
 import { GroupMember } from './group-member.entity';
+import { GroupNote } from './group-note.entity';
 
 export interface IGroup {
   name: string;
@@ -75,14 +77,22 @@ export class Group extends AbstractEntity implements IGroup {
 
   // relationships
   @Field(() => GroupMember)
-  @OneToMany(() => GroupMember, (groupMember) => groupMember.users)
-  users: Promise<GroupMember>;
+  @OneToMany(() => GroupMember, (groupMember) => groupMember.group)
+  users: Promise<GroupMember[]>;
 
   @Field(() => GroupAttendance)
   @OneToMany(() => GroupAttendance, (groupAttendance) => groupAttendance.group)
-  attendances: Promise<GroupAttendance>;
+  attendances: Promise<GroupAttendance[]>;
 
   @Field(() => GroupBoard)
   @OneToMany(() => GroupBoard, (groupBoard) => groupBoard.group)
-  boards: Promise<GroupBoard>;
+  boards: Promise<GroupBoard[]>;
+
+  @Field(() => GroupNote)
+  @OneToMany(() => GroupNote, (groupNote) => groupNote.group)
+  notes: Promise<GroupNote[]>;
+
+  @Field(() => GroupEvent)
+  @OneToMany(() => GroupEvent, (groupNote) => groupNote.group)
+  events: Promise<GroupEvent[]>;
 }

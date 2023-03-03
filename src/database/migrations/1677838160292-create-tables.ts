@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class createTables1677833833715 implements MigrationInterface {
-    name = 'createTables1677833833715'
+export class createTables1677838160292 implements MigrationInterface {
+    name = 'createTables1677838160292'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE \`question_images\` (\`id\` varchar(36) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`name\` varchar(20) NOT NULL, \`question_id\` varchar(36) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
@@ -16,6 +16,8 @@ export class createTables1677833833715 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE \`group_columns\` (\`id\` varchar(36) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`is_favorite\` tinyint NOT NULL COMMENT '0: NORMAL | 1: FAVORITE' DEFAULT '0', \`title\` varchar(100) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`group_column_orders\` (\`id\` varchar(36) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`order\` tinyint NOT NULL, \`column_id\` varchar(36) NOT NULL, \`board_id\` varchar(36) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`group_boards\` (\`id\` varchar(36) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`title\` varchar(100) NOT NULL, \`color\` varchar(7) NOT NULL, \`group_id\` varchar(36) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`group_events\` (\`id\` varchar(36) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`name\` varchar(100) NOT NULL, \`description\` varchar(255) NOT NULL, \`meeting_url\` varchar(200) NOT NULL, \`start_time\` timestamp NULL, \`end_time\` timestamp NULL, \`is_hidden\` tinyint NOT NULL COMMENT '0: FALSE | 1: TRUE' DEFAULT '0', \`type\` tinyint NOT NULL COMMENT '0: EVENT | 1: TODO | 2: ANNOUCEMENT' DEFAULT '0', \`color\` varchar(20) NOT NULL, \`group_id\` varchar(36) NOT NULL, \`member_id\` varchar(36) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`group_notes\` (\`id\` varchar(36) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`title\` varchar(100) NOT NULL, \`content\` longtext NOT NULL, \`category\` varchar(50) NOT NULL, \`color\` varchar(20) NOT NULL, \`is_hidden\` tinyint NOT NULL COMMENT '0: FALSE | 1: TRUE' DEFAULT '0', \`group_id\` varchar(36) NOT NULL, \`member_id\` varchar(36) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`groups\` (\`id\` varchar(36) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`name\` varchar(100) NOT NULL, \`image_url\` varchar(255) NOT NULL, \`logo\` varchar(255) NOT NULL, \`qr_code\` varchar(255) NOT NULL, \`invite_code\` varchar(255) NOT NULL, \`meeting_link\` varchar(255) NOT NULL, \`sub_meeting_link\` varchar(255) NOT NULL, \`deleted_at\` timestamp(6) NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`group_members\` (\`id\` varchar(36) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`joinDate\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, \`outDate\` timestamp NULL, \`role\` tinyint NOT NULL COMMENT '0: ADMIN | 1: SUBADMIN | 2: MEMBER' DEFAULT '2', \`user_id\` varchar(36) NOT NULL, \`group_id\` varchar(36) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`users\` (\`id\` varchar(36) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`full_name\` varchar(50) NOT NULL, \`email\` varchar(50) NOT NULL, \`password\` varchar(255) NOT NULL, \`avatar\` varchar(20) NULL, \`banner\` varchar(20) NULL, \`phone_number\` varchar(11) NULL, \`description\` longtext NULL, \`role\` tinyint NOT NULL COMMENT '0: ADMIN | 1: STUDENT | 2: LECTURE', \`gender\` tinyint NOT NULL COMMENT '0: Unknow | 1: Male | 2: Female', \`is_valid_email\` tinyint NOT NULL, \`face_recognition_model\` varchar(200) NULL, \`secret_key\` varchar(50) NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
@@ -37,6 +39,10 @@ export class createTables1677833833715 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE \`group_column_orders\` ADD CONSTRAINT \`FK_f981c39d1c9b4f1e5b7c329b3bf\` FOREIGN KEY (\`column_id\`) REFERENCES \`group_columns\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`group_column_orders\` ADD CONSTRAINT \`FK_b34c3132c05fb800d4a980c3d8e\` FOREIGN KEY (\`board_id\`) REFERENCES \`group_boards\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`group_boards\` ADD CONSTRAINT \`FK_8c77bea0e0c642efd165de13f13\` FOREIGN KEY (\`group_id\`) REFERENCES \`groups\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`group_events\` ADD CONSTRAINT \`FK_cfaa278d9a23b2057d139d20a48\` FOREIGN KEY (\`group_id\`) REFERENCES \`groups\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`group_events\` ADD CONSTRAINT \`FK_9d555eb41473216b9ac9fb7170c\` FOREIGN KEY (\`member_id\`) REFERENCES \`group_members\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`group_notes\` ADD CONSTRAINT \`FK_56b8dae27b0b02a01d5467510f9\` FOREIGN KEY (\`group_id\`) REFERENCES \`groups\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`group_notes\` ADD CONSTRAINT \`FK_97e465c7a653dff1a018c34cadb\` FOREIGN KEY (\`member_id\`) REFERENCES \`group_members\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`group_members\` ADD CONSTRAINT \`FK_20a555b299f75843aa53ff8b0ee\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`group_members\` ADD CONSTRAINT \`FK_2c840df5db52dc6b4a1b0b69c6e\` FOREIGN KEY (\`group_id\`) REFERENCES \`groups\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`user_question_actions\` ADD CONSTRAINT \`FK_559651a82d8eb825898d4fd4d0d\` FOREIGN KEY (\`question_id\`) REFERENCES \`questions\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -58,6 +64,10 @@ export class createTables1677833833715 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE \`user_question_actions\` DROP FOREIGN KEY \`FK_559651a82d8eb825898d4fd4d0d\``);
         await queryRunner.query(`ALTER TABLE \`group_members\` DROP FOREIGN KEY \`FK_2c840df5db52dc6b4a1b0b69c6e\``);
         await queryRunner.query(`ALTER TABLE \`group_members\` DROP FOREIGN KEY \`FK_20a555b299f75843aa53ff8b0ee\``);
+        await queryRunner.query(`ALTER TABLE \`group_notes\` DROP FOREIGN KEY \`FK_97e465c7a653dff1a018c34cadb\``);
+        await queryRunner.query(`ALTER TABLE \`group_notes\` DROP FOREIGN KEY \`FK_56b8dae27b0b02a01d5467510f9\``);
+        await queryRunner.query(`ALTER TABLE \`group_events\` DROP FOREIGN KEY \`FK_9d555eb41473216b9ac9fb7170c\``);
+        await queryRunner.query(`ALTER TABLE \`group_events\` DROP FOREIGN KEY \`FK_cfaa278d9a23b2057d139d20a48\``);
         await queryRunner.query(`ALTER TABLE \`group_boards\` DROP FOREIGN KEY \`FK_8c77bea0e0c642efd165de13f13\``);
         await queryRunner.query(`ALTER TABLE \`group_column_orders\` DROP FOREIGN KEY \`FK_b34c3132c05fb800d4a980c3d8e\``);
         await queryRunner.query(`ALTER TABLE \`group_column_orders\` DROP FOREIGN KEY \`FK_f981c39d1c9b4f1e5b7c329b3bf\``);
@@ -80,6 +90,8 @@ export class createTables1677833833715 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE \`users\``);
         await queryRunner.query(`DROP TABLE \`group_members\``);
         await queryRunner.query(`DROP TABLE \`groups\``);
+        await queryRunner.query(`DROP TABLE \`group_notes\``);
+        await queryRunner.query(`DROP TABLE \`group_events\``);
         await queryRunner.query(`DROP TABLE \`group_boards\``);
         await queryRunner.query(`DROP TABLE \`group_column_orders\``);
         await queryRunner.query(`DROP TABLE \`group_columns\``);

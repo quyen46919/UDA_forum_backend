@@ -5,6 +5,8 @@ import { AbstractEntity } from './abstract.entity';
 import { Group } from './group.entity';
 import { User } from './user.entity';
 import { GroupAttendance } from './group-attendance.entity';
+import { GroupEvent } from './group-event.entity';
+import { GroupNote } from './group-note.entity';
 
 export interface IGroupMember {
   joinDate: string;
@@ -55,7 +57,7 @@ export class GroupMember extends AbstractEntity implements IGroupMember {
   @Field(() => Group)
   @ManyToOne(() => Group, (group) => group.users)
   @JoinColumn({ name: 'group_id' })
-  groups: Promise<Group>;
+  group: Promise<Group>;
 
   @Column({ name: 'group_id', type: 'varchar', length: 36 })
   groupId: string;
@@ -63,4 +65,12 @@ export class GroupMember extends AbstractEntity implements IGroupMember {
   @Field(() => GroupAttendance)
   @OneToMany(() => GroupAttendance, (groupAttendance) => groupAttendance.member)
   attendances: Promise<GroupAttendance>;
+
+  @Field(() => GroupEvent)
+  @OneToMany(() => GroupEvent, (groupEvent) => groupEvent.member)
+  events: Promise<GroupEvent>;
+
+  @Field(() => GroupNote)
+  @OneToMany(() => GroupNote, (groupNote) => groupNote.member)
+  notes: Promise<GroupNote>;
 }
