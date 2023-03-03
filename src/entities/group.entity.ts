@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { GroupAttendance } from './group-attendance.entity';
+import { GroupBoard } from './group-board.entity';
 import { GroupMember } from './group-member.entity';
 
 export interface IGroup {
@@ -80,4 +81,8 @@ export class Group extends AbstractEntity implements IGroup {
   @Field(() => GroupAttendance)
   @OneToMany(() => GroupAttendance, (groupAttendance) => groupAttendance.group)
   attendances: Promise<GroupAttendance>;
+
+  @Field(() => GroupBoard)
+  @OneToMany(() => GroupBoard, (groupBoard) => groupBoard.group)
+  boards: Promise<GroupBoard>;
 }
