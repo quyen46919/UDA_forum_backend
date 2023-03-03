@@ -6,6 +6,7 @@ import { GroupBoard } from './group-board.entity';
 import { GroupEvent } from './group-event.entity';
 import { GroupMember } from './group-member.entity';
 import { GroupNote } from './group-note.entity';
+import { GroupQuickQuestion } from './group-quick-question.entity';
 
 export interface IGroup {
   name: string;
@@ -95,4 +96,11 @@ export class Group extends AbstractEntity implements IGroup {
   @Field(() => GroupEvent)
   @OneToMany(() => GroupEvent, (groupNote) => groupNote.group)
   events: Promise<GroupEvent[]>;
+
+  @Field(() => GroupQuickQuestion)
+  @OneToMany(
+    () => GroupQuickQuestion,
+    (GroupQuickQuestion) => GroupQuickQuestion.group,
+  )
+  quickQuestions: Promise<GroupQuickQuestion[]>;
 }
