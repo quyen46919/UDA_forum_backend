@@ -1,6 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { GenderTypes } from '../common/enums/gender.enum';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { RoleTypes } from '../common/enums/role.enum';
 import { UserToken } from './user-token.entity';
@@ -9,6 +9,7 @@ import { Question } from './question.entity';
 import { Answer } from './answer.entity';
 import { UserAnswerAction } from './user-answer-action.entity';
 import { Image } from './image.entity';
+import { GroupMember } from './group-member.entity';
 
 export interface IUser {
   fullName: string;
@@ -151,4 +152,8 @@ export class User extends AbstractEntity implements IUser {
   @Field(() => [Image])
   @OneToMany(() => Image, (image) => image.user)
   images: Promise<Image[]>;
+
+  @Field(() => GroupMember)
+  @OneToMany(() => GroupMember, (groupMember) => groupMember.users)
+  group: Promise<GroupMember>;
 }
