@@ -23,6 +23,7 @@ export class GroupMember extends AbstractEntity implements IGroupMember {
   @Column({
     name: 'joinDate',
     type: 'timestamp',
+    precision: 6,
     default: () => 'CURRENT_TIMESTAMP',
   })
   @Field(() => String)
@@ -31,9 +32,10 @@ export class GroupMember extends AbstractEntity implements IGroupMember {
   @Column({
     name: 'outDate',
     type: 'timestamp',
+    precision: 6,
     default: null,
   })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   outDate?: string;
 
   @Column({
@@ -47,9 +49,9 @@ export class GroupMember extends AbstractEntity implements IGroupMember {
 
   // relationships
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.group)
+  @ManyToOne(() => User, (user) => user.groups)
   @JoinColumn({ name: 'user_id' })
-  users: Promise<User>;
+  user: Promise<User>;
 
   @Column({ name: 'user_id', type: 'varchar', length: 36 })
   userId: string;

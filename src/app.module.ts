@@ -20,6 +20,8 @@ import { UserQuestionActionModule } from './modules/user-question-actions/user-q
 import { AnswerModule } from './modules/answers/answer.module';
 import { UserAnswerActionModule } from './modules/user-answer-actions/user-answer-action.module';
 import { ImageModule } from './modules/images/images.module';
+import { GroupModule } from './modules/group/group.module';
+import { GroupMemberModule } from './modules/group-member/group-member.module';
 // import { APP_FILTER } from '@nestjs/core';
 // import { ExceptionLoggerFilter } from './utils/exceptionLogger.filter';
 
@@ -36,6 +38,8 @@ import { ImageModule } from './modules/images/images.module';
     AnswerModule,
     UserAnswerActionModule,
     ImageModule,
+    GroupModule,
+    GroupMemberModule,
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL, {
       useNewUrlParser: true,
@@ -70,8 +74,8 @@ import { ImageModule } from './modules/images/images.module';
       include: [],
       formatError: (error: any) => {
         const graphQLFormattedError: any = {
-          code: error?.extensions?.exception?.status,
-          message: error?.extensions?.exception['message'] || error?.message,
+          code: error?.extensions?.response?.statusCode,
+          message: error?.extensions?.response?.message || error.message,
         };
         return graphQLFormattedError;
       },

@@ -16,7 +16,6 @@ type UserToken {
   role: Int!
 }
 
-<<<<<<< HEAD
 """answer_images"""
 type AnswerImage {
   id: ID!
@@ -51,8 +50,6 @@ type Answer {
   question: Question!
 }
 
-=======
->>>>>>> master
 """question_images"""
 type QuestionImage {
   id: ID!
@@ -73,22 +70,13 @@ type Tag {
 
 """question_tags"""
 type QuestionTag {
-<<<<<<< HEAD
   id: ID!
   tag: Tag!
-=======
-  tag: Tag!
-  question: Question!
->>>>>>> master
 }
 
 """questions"""
 type Question {
   id: ID!
-<<<<<<< HEAD
-=======
-  createUserId: String
->>>>>>> master
   title: String!
   content: String!
   count: Int!
@@ -96,16 +84,11 @@ type Question {
 
   """0: FALSE | 1: TRUE"""
   isHidden: Int!
-<<<<<<< HEAD
   user: User!
   tags: [QuestionTag!]!
   images: [QuestionImage!]!
   actions: [UserQuestionAction!]!
   answers: [Answer!]!
-=======
-  tags: [QuestionTag!]!
-  images: [QuestionImage!]!
->>>>>>> master
 }
 
 """user_question_actions"""
@@ -116,7 +99,6 @@ type UserQuestionAction {
   user: User!
 }
 
-<<<<<<< HEAD
 """Images"""
 type Image {
   id: ID!
@@ -128,8 +110,151 @@ type Image {
   user: User!
 }
 
-=======
->>>>>>> master
+"""group_attendances"""
+type GroupAttendance {
+  id: ID!
+  time: String!
+  member: GroupMember!
+  group: Group!
+}
+
+"""cards"""
+type GroupCard {
+  id: ID!
+  title: String!
+  content: String!
+  tag: String!
+  thumbnail: String!
+  order: GroupCardOrder!
+}
+
+"""group_card_orders"""
+type GroupCardOrder {
+  id: ID!
+  order: Int!
+  columns: GroupColumn!
+  card: GroupCard!
+}
+
+"""group_columns"""
+type GroupColumn {
+  id: ID!
+
+  """0: NORMAL | 1: FAVORITE"""
+  isFavorite: String!
+  title: String!
+  columnOrders: GroupColumnOrder!
+  cardOrders: GroupCardOrder!
+}
+
+"""group_column_orders"""
+type GroupColumnOrder {
+  id: ID!
+  order: Int!
+  columns: GroupColumn!
+  boards: GroupBoard!
+}
+
+"""group_boards"""
+type GroupBoard {
+  id: ID!
+  title: String!
+  color: String!
+  group: Group!
+  columnOrder: GroupColumnOrder!
+}
+
+"""group_events"""
+type GroupEvent {
+  id: ID!
+  name: String!
+  description: String!
+  meetingUrl: String!
+  startTime: String!
+  endTime: String!
+
+  """0: FALSE | 1: TRUE -> DEFAULT: FALSE"""
+  isHidden: Int!
+
+  """0: EVENT | 1: TODO | 2: ANNOUCEMENT -> DEFAULT: EVENT"""
+  type: Int!
+  color: String!
+  group: Group!
+  member: GroupMember!
+}
+
+"""group_notes"""
+type GroupNote {
+  id: ID!
+  title: String!
+  content: String!
+  category: String!
+  color: String!
+
+  """0: FALSE | 1: TRUE -> DEFAULT: FALSE"""
+  isHidden: String!
+  group: Group!
+  member: GroupMember!
+}
+
+"""group_quick_answers"""
+type GroupQuickAnswer {
+  id: ID!
+  responseNickname: String!
+  answer: String!
+  question: GroupQuickQuestion!
+}
+
+"""group_quick_questions"""
+type GroupQuickQuestion {
+  id: ID!
+  title: String!
+  startTime: String!
+  endTime: String!
+  note: String!
+
+  """0: NO NAME REQUIRED | 1: NAME REQUIRED -> DEFAULT: 0"""
+  type: String!
+
+  """0: FALSE | 1: TRUE -> DEFAULT: 0"""
+  isHidden: Int!
+  group: Group!
+  answers: GroupQuickAnswer!
+}
+
+"""groups"""
+type Group {
+  id: ID!
+  name: String!
+  imageUrl: String
+  logo: String!
+  qrCode: String
+  inviteCode: String
+  meetingLink: String!
+  subMeetingLink: String
+  users: GroupMember!
+  attendances: GroupAttendance!
+  boards: GroupBoard!
+  notes: GroupNote!
+  events: GroupEvent!
+  quickQuestions: GroupQuickQuestion!
+}
+
+"""group_members"""
+type GroupMember {
+  id: ID!
+  joinDate: String!
+  outDate: String
+
+  """0: ADMIN | 1: SUBADMIN | 2: MEMBER"""
+  role: Int!
+  user: User!
+  group: Group!
+  attendances: GroupAttendance!
+  events: GroupEvent!
+  notes: GroupNote!
+}
+
 """users"""
 type User {
   id: ID!
@@ -151,13 +276,11 @@ type User {
   secret_key: String
   userTokens: [UserToken!]!
   questionActions: [UserQuestionAction!]!
-<<<<<<< HEAD
   answerActions: [UserAnswerAction!]!
   questions: [Question!]!
   answers: [Answer!]!
   images: [Image!]!
-=======
->>>>>>> master
+  groups: GroupMember!
 }
 
 type LoginResponseType {
@@ -246,6 +369,28 @@ type ImageResponseType {
   image: Image!
 }
 
+type GroupMemberResponse {
+  page: GroupMemberConnection!
+  pageData: PageData
+}
+
+type GroupMemberConnection {
+  edges: [GroupMemberEdge!]
+  pageInfo: GroupMemberPageInfo
+}
+
+type GroupMemberEdge {
+  cursor: String
+  node: GroupMember
+}
+
+type GroupMemberPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
 type Query {
   users: [User!]!
   tags(
@@ -292,6 +437,19 @@ type Query {
   ): AnswerResponse!
   files: [Image!]!
   file(id: String!): Image!
+  groupMembers(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+  ): GroupMemberResponse!
 }
 
 type Mutation {
@@ -331,6 +489,18 @@ type Mutation {
 
   """Delete file"""
   removeFile(id: String!): Image!
+
+  """Create group"""
+  createGroup(createGroupInput: CreateGroupInput!): Group!
+
+  """Create group member"""
+  createGroupMember(createGroupMemberInput: CreateGroupMemberInput!): GroupMember!
+
+  """Update group member role"""
+  updateGroupMemberRole(updateGroupMemberRoleInput: UpdateGroupMemberRoleInput!): GroupMember!
+
+  """Soft remove group member"""
+  removeGroupMember(groupMemberId: String!): GroupMember!
 }
 
 input LoginInput {
@@ -399,4 +569,28 @@ input UpdateImageInput {
   blurHash: String
   createUserId: ID
   id: String!
+}
+
+input CreateGroupInput {
+  courseId: String
+  name: String!
+  imageUrl: String
+  logo: String!
+  meetingLink: String!
+  subMeetingLink: String
+}
+
+input CreateGroupMemberInput {
+  groupId: String!
+  userId: String!
+
+  """format example: 2011-10-05T14:48:00.000Z"""
+  joinDate: String!
+}
+
+input UpdateGroupMemberRoleInput {
+  id: String!
+
+  """0: ADMIN | 1: SUBADMIN | 2: MEMBER"""
+  role: Int!
 }
