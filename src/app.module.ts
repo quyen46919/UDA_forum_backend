@@ -20,8 +20,9 @@ import { UserQuestionActionModule } from './modules/user-question-actions/user-q
 import { AnswerModule } from './modules/answers/answer.module';
 import { UserAnswerActionModule } from './modules/user-answer-actions/user-answer-action.module';
 import { ImageModule } from './modules/images/images.module';
-import { GroupModule } from './modules/group/group.module';
+import { GroupModule } from './modules/groups/group.module';
 import { GroupMemberModule } from './modules/group-member/group-member.module';
+import { GroupAttendanceModule } from './modules/group-attendances/group-attendance.module';
 // import { APP_FILTER } from '@nestjs/core';
 // import { ExceptionLoggerFilter } from './utils/exceptionLogger.filter';
 
@@ -40,6 +41,7 @@ import { GroupMemberModule } from './modules/group-member/group-member.module';
     ImageModule,
     GroupModule,
     GroupMemberModule,
+    GroupAttendanceModule,
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL, {
       useNewUrlParser: true,

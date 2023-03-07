@@ -114,6 +114,12 @@ type Image {
 type GroupAttendance {
   id: ID!
   time: String!
+
+  """0: ONLINE | 1: AWAY | 2: DO NOT DISTURB | 3: OFFLINE"""
+  status: String!
+
+  """Using image or video uuid"""
+  evidence: String!
   member: GroupMember!
   group: Group!
 }
@@ -391,6 +397,28 @@ type GroupMemberPageInfo {
   hasNextPage: Boolean
 }
 
+type GroupAttendanceResponse {
+  page: GroupAttendanceConnection!
+  pageData: PageData
+}
+
+type GroupAttendanceConnection {
+  edges: [GroupAttendanceEdge!]
+  pageInfo: GroupAttendancePageInfo
+}
+
+type GroupAttendanceEdge {
+  cursor: String
+  node: GroupAttendance
+}
+
+type GroupAttendancePageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
 type Query {
   users: [User!]!
   tags(
@@ -450,6 +478,25 @@ type Query {
     """Paginate last"""
     last: Float
   ): GroupMemberResponse!
+  groupAttendances(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+
+    """Start time of search"""
+    startTime: String
+
+    """End time of search"""
+    endTime: String
+  ): GroupAttendanceResponse!
 }
 
 type Mutation {
@@ -501,6 +548,9 @@ type Mutation {
 
   """Soft remove group member"""
   removeGroupMember(groupMemberId: String!): GroupMember!
+
+  """create class attendance with evidence"""
+  createAttendance(createAttendanceInput: CreateAttendanceInput!): GroupAttendance!
 }
 
 input LoginInput {
@@ -593,4 +643,14 @@ input UpdateGroupMemberRoleInput {
 
   """0: ADMIN | 1: SUBADMIN | 2: MEMBER"""
   role: Int!
+}
+
+input CreateAttendanceInput {
+  memberId: String!
+  groupId: String!
+
+  """format example: 2011-10-05T14:48:00.000Z"""
+  time: String!
+  status: Int!
+  evidence: String!
 }
