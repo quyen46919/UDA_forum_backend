@@ -124,41 +124,46 @@ type GroupAttendance {
   group: Group!
 }
 
-"""cards"""
+"""group_board_histories"""
+type GroupBoardHistory {
+  id: ID!
+
+  """
+  0: CREATE_COLUMN | 1: DROP_COLUMN | 2: ADD_NEW_CARD_TO_COLUMN | 3: DROP_CARD_FROM_COLUMN | 4: MOVE_CARD_FROM_COLUMN_TO_COLUMN | 5: ASSIGN_MEMBER_TO_CARD | 6: UNASSIGN_MEMBER_FROM_CARD | 7: FINISH_ASSIGNED_TASK_FROM_CARD
+  """
+  type: Int!
+  columnName: String
+  cardName: String
+  fromColumn: String
+  toColumn: String
+  fromCard: String
+  toCard: String
+  assigneeId: String
+  board: GroupBoard!
+  member: GroupMember!
+}
+
+"""group_cards"""
 type GroupCard {
   id: ID!
   title: String!
   content: String!
   tag: String!
   thumbnail: String!
-  order: GroupCardOrder!
-}
-
-"""group_card_orders"""
-type GroupCardOrder {
-  id: ID!
   order: Int!
-  columns: GroupColumn!
-  card: GroupCard!
+
+  """0: NONE | 1: FAVORITED"""
+  isFavorite: String!
+  column: GroupColumn!
 }
 
 """group_columns"""
 type GroupColumn {
   id: ID!
-
-  """0: NORMAL | 1: FAVORITE"""
-  isFavorite: String!
   title: String!
-  columnOrders: GroupColumnOrder!
-  cardOrders: GroupCardOrder!
-}
-
-"""group_column_orders"""
-type GroupColumnOrder {
-  id: ID!
   order: Int!
-  columns: GroupColumn!
-  boards: GroupBoard!
+  board: GroupBoard!
+  cards: GroupCard
 }
 
 """group_boards"""
@@ -167,7 +172,8 @@ type GroupBoard {
   title: String!
   color: String!
   group: Group!
-  columnOrder: GroupColumnOrder!
+  columns: GroupColumn
+  histories: GroupBoardHistory!
 }
 
 """group_events"""
@@ -259,6 +265,7 @@ type GroupMember {
   attendances: GroupAttendance!
   events: GroupEvent!
   notes: GroupNote!
+  histories: GroupBoardHistory!
 }
 
 """users"""
@@ -419,6 +426,28 @@ type GroupAttendancePageInfo {
   hasNextPage: Boolean
 }
 
+type GroupBoardResponse {
+  page: GroupBoardConnection!
+  pageData: PageData
+}
+
+type GroupBoardConnection {
+  edges: [GroupBoardEdge!]
+  pageInfo: GroupBoardPageInfo
+}
+
+type GroupBoardEdge {
+  cursor: String
+  node: GroupBoard
+}
+
+type GroupBoardPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
 type Query {
   users: [User!]!
   tags(
@@ -497,6 +526,20 @@ type Query {
     """End time of search"""
     endTime: String
   ): GroupAttendanceResponse!
+  groupBoards(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+    groupId: String!
+  ): GroupBoardResponse!
 }
 
 type Mutation {
@@ -551,6 +594,15 @@ type Mutation {
 
   """create class attendance with evidence"""
   createAttendance(createAttendanceInput: CreateAttendanceInput!): GroupAttendance!
+
+  """Create group board"""
+  createGroupBoard(createGroupBoardInput: CreateGroupBoardInput!): GroupBoard!
+
+  """Update group board"""
+  updateGroupBoard(updateGroupBoardInput: UpdateGroupBoardInput!): GroupBoard!
+
+  """Create group column"""
+  createGroupColumn(createGroupColumnInput: CreateGroupColumnInput!): GroupColumn!
 }
 
 input LoginInput {
@@ -653,4 +705,21 @@ input CreateAttendanceInput {
   time: String!
   status: Int!
   evidence: String!
+}
+
+input CreateGroupBoardInput {
+  groupId: String!
+  title: String!
+  color: String!
+}
+
+input UpdateGroupBoardInput {
+  id: String!
+  title: String!
+  color: String!
+}
+
+input CreateGroupColumnInput {
+  boardId: String!
+  title: String!
 }

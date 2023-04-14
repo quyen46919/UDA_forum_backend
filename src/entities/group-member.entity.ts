@@ -7,6 +7,7 @@ import { User } from './user.entity';
 import { GroupAttendance } from './group-attendance.entity';
 import { GroupEvent } from './group-event.entity';
 import { GroupNote } from './group-note.entity';
+import { GroupBoardHistory } from './group-board-history.entity';
 
 export interface IGroupMember {
   joinDate: string;
@@ -75,4 +76,11 @@ export class GroupMember extends AbstractEntity implements IGroupMember {
   @Field(() => GroupNote)
   @OneToMany(() => GroupNote, (groupNote) => groupNote.member)
   notes: Promise<GroupNote>;
+
+  @Field(() => GroupBoardHistory)
+  @OneToMany(
+    () => GroupBoardHistory,
+    (groupBoardHistory) => groupBoardHistory.member,
+  )
+  histories: Promise<GroupBoardHistory>;
 }

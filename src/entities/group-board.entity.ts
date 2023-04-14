@@ -1,7 +1,8 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
-import { GroupColumnOrder } from './group-column-order.entity';
+import { GroupBoardHistory } from './group-board-history.entity';
+import { GroupColumn } from './group-columns.entity';
 import { Group } from './group.entity';
 
 export interface IGroupBoard {
@@ -26,7 +27,7 @@ export class GroupBoard extends AbstractEntity implements IGroupBoard {
   @Column({
     name: 'color',
     type: 'varchar',
-    length: 7,
+    length: 50,
   })
   @Field(() => String)
   color: string;
@@ -38,9 +39,17 @@ export class GroupBoard extends AbstractEntity implements IGroupBoard {
   group: Promise<Group>;
 
   @Column({ name: 'group_id', type: 'varchar', length: 36 })
-  createUserId: string;
+  groupId: string;
 
-  @Field(() => GroupColumnOrder)
-  @OneToMany(() => GroupColumnOrder, (columnOrder) => columnOrder.columns)
-  columnOrder: Promise<GroupColumnOrder[]>;
+  @Field(() => GroupColumn, { nullable: true })
+  @OneToMany(() => GroupColumn, (column) => column.board, {
+    eager: true,
+    lazy: true,
+    nullable: true,
+  })
+  columns: Promise<GroupColumn>;
+
+  @Field(() => GroupBoardHistory)
+  @OneToMany(() => GroupBoardHistory, (column) => column.board)
+  histories: Promise<GroupBoardHistory>;
 }

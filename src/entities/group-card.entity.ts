@@ -1,17 +1,20 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { FavoriteTypes } from '../common/enums/favorite.enum';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
-import { GroupCardOrder } from './group-card-order.entity';
+import { GroupColumn } from './group-columns.entity';
 
 export interface IGroupCard {
   title: string;
   content: string;
   tag: string;
   thumbnail: string;
+  order: number;
+  isFavorite: number;
 }
 
-@Entity({ name: 'cards' })
-@ObjectType({ description: 'cards' })
+@Entity({ name: 'group_cards' })
+@ObjectType({ description: 'group_cards' })
 export class GroupCard extends AbstractEntity implements IGroupCard {
   @Field(() => ID)
   id: string;
@@ -48,8 +51,28 @@ export class GroupCard extends AbstractEntity implements IGroupCard {
   @Field(() => String)
   thumbnail: string;
 
+  @Column({
+    name: 'order',
+    type: 'smallint',
+  })
+  @Field(() => Int)
+  order: number;
+
+  @Column({
+    name: 'is_favorite',
+    type: 'tinyint',
+    default: FavoriteTypes.NONE,
+    comment: '0: NONE | 1: FAVORITED',
+  })
+  @Field(() => String, { description: '0: NONE | 1: FAVORITED' })
+  isFavorite: FavoriteTypes;
+
   // relationships
-  @Field(() => GroupCardOrder)
-  @OneToMany(() => GroupCardOrder, (cardOrder) => cardOrder.card)
-  order: Promise<GroupCardOrder>;
+  @Field(() => GroupColumn)
+  @ManyToOne(() => GroupColumn, (column) => column.cards)
+  @JoinColumn({ name: 'column_id' })
+  column: Promise<GroupColumn>;
+
+  @Column({ name: 'column_id', type: 'varchar', length: 36 })
+  columnId: string;
 }

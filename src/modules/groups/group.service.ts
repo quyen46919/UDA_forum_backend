@@ -14,4 +14,8 @@ export class GroupService {
   async create(createGroupInput: CreateGroupInput) {
     return this.groupRepository.save(createGroupInput);
   }
+
+  async findOne(groupId: string) {
+    return this.groupRepository.findOne(groupId);
+  }
 }
