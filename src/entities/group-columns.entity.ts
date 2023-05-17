@@ -1,13 +1,12 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
-import { HiddenTypes } from '../common/enums/hidden.enum';
-import { GroupColumnOrder } from './group-column-order.entity';
-import { GroupCardOrder } from './group-card-order.entity';
+import { GroupBoard } from './group-board.entity';
+import { GroupCard } from './group-card.entity';
 
 export interface IGroupColumn {
   title: string;
-  isFavorite: number;
+  order: number;
 }
 
 @Entity({ name: 'group_columns' })
@@ -17,15 +16,6 @@ export class GroupColumn extends AbstractEntity implements IGroupColumn {
   id: string;
 
   @Column({
-    name: 'is_favorite',
-    type: 'tinyint',
-    default: HiddenTypes.FALSE,
-    comment: '0: NORMAL | 1: FAVORITE',
-  })
-  @Field(() => String, { description: '0: NORMAL | 1: FAVORITE' })
-  isFavorite: HiddenTypes;
-
-  @Column({
     name: 'title',
     type: 'varchar',
     length: 100,
@@ -33,12 +23,23 @@ export class GroupColumn extends AbstractEntity implements IGroupColumn {
   @Field(() => String)
   title: string;
 
-  // relationships
-  @Field(() => GroupColumnOrder)
-  @OneToMany(() => GroupColumnOrder, (columnOrder) => columnOrder.boards)
-  columnOrders: Promise<GroupColumnOrder>;
+  @Column({
+    name: 'order',
+    type: 'smallint',
+  })
+  @Field(() => Int)
+  order: number;
 
-  @Field(() => GroupCardOrder)
-  @OneToMany(() => GroupCardOrder, (card) => card.columns)
-  cardOrders: Promise<GroupCardOrder[]>;
+  // relationships
+  @Field(() => GroupBoard, { nullable: false })
+  @ManyToOne(() => GroupBoard, (board) => board.columns)
+  @JoinColumn({ name: 'board_id' })
+  board: Promise<GroupBoard>;
+
+  @Column({ name: 'board_id', type: 'varchar', length: 36 })
+  boardId: string;
+
+  @Field(() => GroupCard, { nullable: true })
+  @OneToMany(() => GroupCard, (card) => card.column, { nullable: true })
+  cards: Promise<GroupCard>;
 }

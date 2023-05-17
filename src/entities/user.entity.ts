@@ -154,6 +154,6 @@ export class User extends AbstractEntity implements IUser {
   images: Promise<Image[]>;
 
   @Field(() => GroupMember)
-  @OneToMany(() => GroupMember, (groupMember) => groupMember.users)
-  group: Promise<GroupMember>;
+  @OneToMany(() => GroupMember, (groupMember) => groupMember.user)
+  groups: Promise<GroupMember>;
 }

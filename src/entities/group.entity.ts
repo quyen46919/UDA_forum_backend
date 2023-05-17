@@ -34,7 +34,7 @@ export class Group extends AbstractEntity implements IGroup {
   @Column({
     name: 'image_url',
   })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   imageUrl?: string;
 
   @Column({
@@ -45,16 +45,18 @@ export class Group extends AbstractEntity implements IGroup {
 
   @Column({
     name: 'qr_code',
+    default: null,
   })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   qrCode?: string;
 
   @Column({
     name: 'invite_code',
     length: 255,
+    default: null,
   })
-  @Field(() => String)
-  inviteCode: string;
+  @Field(() => String, { nullable: true })
+  inviteCode?: string;
 
   @Column({
     name: 'meeting_link',
@@ -66,9 +68,10 @@ export class Group extends AbstractEntity implements IGroup {
   @Column({
     name: 'sub_meeting_link',
     length: 255,
+    default: null,
   })
-  @Field(() => String)
-  subMeetingLink: string;
+  @Field(() => String, { nullable: true })
+  subMeetingLink?: string;
 
   @DeleteDateColumn({
     type: 'timestamp',
